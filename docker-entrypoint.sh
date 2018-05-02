@@ -32,4 +32,5 @@ if [ "$1" = 'dockerd' ]; then
 	sleep 3
 fi
 
-exec "$@"
+exec java $JAVA_OPTS $JNLP_PROTOCOL_OPTS -cp /usr/share/jenkins/slave.jar hudson.remoting.jnlp.Main -headless $TUNNEL $URL $WORKDIR $OPT_JENKINS_SECRET $OPT_JENKINS_AGENT_NAME "$@"
+

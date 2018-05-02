@@ -76,9 +76,8 @@ COPY modprobe.sh /usr/local/bin/modprobe
 COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose && \
+    composer config -g github-oauth.github.com 32070f30709e862ac3cceb7731a98a091438a113
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-
-CMD ["bash"]
+COPY jenkins-slave.sh /usr/local/bin/jenkins-slave.sh
 
