@@ -1,5 +1,12 @@
 FROM jenkins/jnlp-slave
 USER root
+
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV TZ=Europe/London
+ENV DOCKER_CHANNEL edge
+ENV DOCKER_VERSION 18.04.0-ce
+ENV DOCKER_ARCH x86_64
+
 RUN apt-get clean && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -44,7 +51,34 @@ RUN apt-get clean && \
         ca-certificates \
 	&& \
 	rm -rf /var/lib/apt/lists/* && \
-	apt-get clean && \
-    curl -sS https://getcomposer.org/installer | php && \
+	apt-get clean
+
+RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
-USER jenkins
+
+# Install Docker from Docker Inc. repositories.
+RUN set -ex; \
+    if ! curl -fL -o docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${DOCKER_ARCH}/docker-${DOCKER_VERSION}.tgz"; then \
+        echo >&2 "error: failed to download 'docker-${DOCKER_VERSION}' from '${DOCKER_CHANNEL}' for '${DOCKER_ARCH}'"; \
+        exit 1; \
+    fi; \
+    \
+    tar --extract \
+        --file docker.tgz \
+        --strip-components 1 \
+        --directory /usr/local/bin/ \
+    ; \
+    rm docker.tgz; \
+    \
+    dockerd -v; \
+    docker -v
+COPY modprobe.sh /usr/local/bin/modprobe
+COPY docker-entrypoint.sh /usr/local/bin/
+
+RUN curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["bash"]
+
