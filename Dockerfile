@@ -11,6 +11,7 @@ RUN apt-get clean && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
+        jq \
         php7.1 \
         php-xdebug\
         php7.1-mysql \
