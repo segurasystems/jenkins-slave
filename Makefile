@@ -1,6 +1,5 @@
 GIT_SHORT_COMMIT=`git rev-parse --short HEAD`
 DATE=`date +%Y-%m-%d`
-ARCH = x86
 
 all: prepare build push
 
