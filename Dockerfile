@@ -81,4 +81,5 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-co
     composer config -g github-oauth.github.com 32070f30709e862ac3cceb7731a98a091438a113
 
 COPY jenkins-slave.sh /usr/local/bin/jenkins-slave.sh
+COPY gitconfig /home/jenkins/.gitconfig
 
