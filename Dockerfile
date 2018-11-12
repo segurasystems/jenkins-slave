@@ -53,7 +53,7 @@ RUN apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
 	apt-get clean
 
-RUN curl -sS https://getcomposer.org/installer | php && \
+RUN php --version && curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
 
 # Install Docker from Docker Inc. repositories.
